@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-key="signupTitle">PoKreGaM - Rejestracja</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f7fafc;
+            color: #2d3748;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            width: 100%;
+            max-width: 500px; /* Slightly wider for avatars */
+            box-sizing: border-box;
+            text-align: center;
+            position: relative;
+        }
+
+        .language-selector {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: 1px solid #cbd5e0;
+            background-color: #edf2f7;
+            font-size: 0.9em;
+            color: #2d3748;
+            cursor: pointer;
+            outline: none;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        h2 {
+            color: #2d3748;
+            margin-bottom: 30px;
+            font-size: 2.2em;
+            font-weight: 700;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #4a5568;
+            font-size: 1em;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="password"],
+        input[type="date"],
+        select {
+            width: calc(100% - 24px);
+            padding: 12px;
+            border: 1px solid #cbd5e0;
+            border-radius: 8px;
+            font-size: 1.1em;
+            box-sizing: border-box;
+            background-color: #edf2f7;
+            color: #2d3748;
+        }
+
+        button {
+            padding: 12px 25px;
+            background-color: #4299e1;
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1.2em;
+            font-weight: 700;
+            transition: background-color 0.3s ease-in-out, transform 0.1s ease-in-out;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+        }
+
+        button:hover {
+            background-color: #3182ce;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        .link-text {
+            margin-top: 25px;
+            font-size: 0.95em;
+        }
+
+        .link-text a {
+            color: #4299e1;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.2s ease-in-out;
+        }
+
+        .link-text a:hover {
+            color: #3182ce;
+        }
+
+        .error-message {
+            color: #e53e3e;
+            margin-top: 15px;
+            font-size: 0.9em;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .success-message {
+            color: #38a169;
+            margin-top: 15px;
+            font-size: 0.9em;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        #avatarsContainer {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)); /* Adjust minmax for smaller screens */
+            gap: 15px;
+            margin-bottom: 25px;
+            justify-items: center;
+            padding: 10px 0; /* Add some padding */
+        }
+
+        .avatar {
+            border: 3px solid transparent;
+            border-radius: 12px;
+            padding: 8px;
+            cursor: pointer;
+            text-align: center;
+            transition: border-color .3s ease-in-out, background-color .3s ease-in-out, box-shadow .2s;
+            background-color: #edf2f7;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, .05);
+        }
+
+        .avatar img {
+            width: 70px; /* Slightly smaller for grid */
+            height: 70px;
+            border-radius: 50%;
+            object-fit: cover;
+            display: block;
+            margin: 0 auto 8px;
+            border: 2px solid #cbd5e0;
+        }
+
+        .avatar.selected {
+            border-color: #4299e1;
+            background-color: #ebf8ff;
+            box-shadow: 0 0 0 4px rgba(66, 153, 225, .6);
+            transform: scale(1.05);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 600px) {
+            .container {
+                padding: 25px;
+            }
+            h2 {
+                font-size: 1.8em;
+            }
+            input[type="text"],
+            input[type="email"],
+            input[type="password"],
+            input[type="date"],
+            select {
+                font-size: 1em;
+                padding: 10px;
+            }
+            button {
+                font-size: 1.1em;
+                padding: 10px 20px;
+            }
+            .avatar img {
+                width: 60px;
+                height: 60px;
+            }
+            #avatarsContainer {
+                grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <select id="languageSelect" class="language-selector">
+            <option value="pl">Polski</option>
+            <option value="en">English</option>
+            <option value="ru">Русский</option>
+            <option value="hu">Magyar</option>
+            <option value="mk">Македонски</option>
+        </select>
+
+        <h2 data-key="signupHeader">Stwórz swoje konto PoKreGaM</h2>
+        <form id="signUpForm">
+            <p data-key="selectCharacterLabel">Wybierz swoją postać:</p>
+            <div id="avatarsContainer">
+                <!-- Przykładowe awatary - możesz je zmienić na inne URL-e -->
+                <div class="avatar" data-avatar-url="https://placehold.co/80x80/cccccc/000000?text=👤">
+                    <img src="https://placehold.co/80x80/cccccc/000000?text=👤" alt="Domyślny Awatar">
+                    <span data-key="defaultAvatarName">Domyślny</span>
+                </div>
+                <div class="avatar" data-avatar-url="https://placehold.co/80x80/ffcc00/000000?text=🧙">
+                    <img src="https://placehold.co/80x80/ffcc00/000000?text=🧙" alt="Czarodziej">
+                    <span data-key="wizardAvatarName">Czarodziej</span>
+                </div>
+                <div class="avatar" data-avatar-url="https://placehold.co/80x80/00ccff/000000?text=🛡️">
+                    <img src="https://placehold.co/80x80/00ccff/000000?text=🛡️" alt="Rycerz">
+                    <span data-key="knightAvatarName">Rycerz</span>
+                </div>
+                <div class="avatar" data-avatar-url="https://placehold.co/80x80/cc00ff/000000?text=🧝‍♀️">
+                    <img src="https://placehold.co/80x80/cc00ff/000000?text=🧝‍♀️" alt="Elfka">
+                    <span data-key="elfAvatarName">Elfka</span>
+                </div>
+                <div class="avatar" data-avatar-url="https://placehold.co/80x80/00ffcc/000000?text=🤖">
+                    <img src="https://placehold.co/80x80/00ffcc/000000?text=🤖" alt="Robot">
+                    <span data-key="robotAvatarName">Robot</span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="signUpUsername" data-key="usernameLabel">Nazwa użytkownika:</label>
+                <input type="text" id="signUpUsername" name="username" required autocomplete="username">
+            </div>
+            <div class="form-group">
+                <label for="signUpEmail" data-key="emailLabel">Email (opcjonalnie):</label>
+                <input type="email" id="signUpEmail" name="email" autocomplete="email">
+            </div>
+            <div class="form-group">
+                <label for="signUpCountry" data-key="countryLabel">Kraj:</label>
+                <select id="signUpCountry" name="country" required>
+                    <option value="" data-key="selectCountryOption">Wybierz kraj</option>
+                    <option value="PL">Polska</option>
+                    <option value="US">United States</option>
+                    <option value="MK">North Macedonia</option>
+                    <option value="HU">Hungary</option>
+                    <option value="DE">Germany</option>
+                    <option value="RU">Russia</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="signUpPassword" data-key="passwordLabel">Hasło:</label>
+                <input type="password" id="signUpPassword" name="password" required autocomplete="new-password">
+            </div>
+            <div class="form-group">
+                <label for="signUpConfirmPassword" data-key="confirmPasswordLabel">Potwierdź hasło:</label>
+                <input type="password" id="signUpConfirmPassword" name="confirmPassword" required autocomplete="new-password">
+            </div>
+            <div class="form-group">
+                <label for="signUpBirthdate" data-key="birthdateLabel">Data urodzenia:</label>
+                <input type="date" id="signUpBirthdate" name="birthdate" required>
+            </div>
+            
+            <button type="submit" data-key="signUpButton">Zarejestruj się</button>
+            <p id="signUpError" class="error-message"></p>
+            <p id="signUpSuccess" class="success-message"></p>
+            <p class="link-text">
+                <span data-key="hasAccountText">Masz już konto?</span> <a href="login.html" data-key="loginLink">Zaloguj się</a>
+            </p>
+        </form>
+    </div>
+
+    <script type="module">
+        // --- Firebase Imports and Configuration (PLACEHOLDER) ---
+        // Pamiętaj, aby uzupełnić tę sekcję swoimi danymi Firebase, jeśli chcesz używać prawdziwej bazy danych.
+        // const firebaseConfig = {
+        //     apiKey: "YOUR_API_KEY",
+        //     authDomain: "YOUR_AUTH_DOMAIN",
+        //     projectId: "YOUR_PROJECT_ID",
+        //     storageBucket: "YOUR_STORAGE_BUCKET",
+        //     messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+        //     appId: "YOUR_APP_ID"
+        // };
+        // import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        // import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        // import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        // let app, auth, db;
+        // try {
+        //     app = initializeApp(firebaseConfig);
+        //     auth = getAuth(app);
+        //     db = getFirestore(app);
+        // } catch (e) {
+        //     console.error("Firebase initialization error:", e);
+        //     // Handle Firebase init error, e.g., show a message to the user
+        // }
+        // --- END Firebase Configuration ---
+
+        // Translations object
+        const translations = {
+            pl: {
+                signupTitle: 'PoKreGaM - Rejestracja',
+                signupHeader: 'Stwórz swoje konto PoKreGaM',
+                selectCharacterLabel: 'Wybierz swoją postać:',
+                defaultAvatarName: 'Domyślny',
+                wizardAvatarName: 'Czarodziej',
+                knightAvatarName: 'Rycerz',
+                elfAvatarName: 'Elfka',
+                robotAvatarName: 'Robot',
+                usernameLabel: 'Nazwa użytkownika:',
+                emailLabel: 'Email (opcjonalnie):',
+                countryLabel: 'Kraj:',
+                selectCountryOption: 'Wybierz kraj',
+                passwordLabel: 'Hasło:',
+                confirmPasswordLabel: 'Potwierdź hasło:',
+                birthdateLabel: 'Data urodzenia:',
+                signUpButton: 'Zarejestruj się',
+                hasAccountText: 'Masz już konto?',
+                loginLink: 'Zaloguj się',
+                usernameRequired: 'Nazwa użytkownika jest wymagana.',
+                passwordRequired: 'Hasło jest wymagane.',
+                passwordMinLength: 'Hasło musi mieć co najmniej 6 znaków.',
+                passwordsMismatch: 'Hasła nie pasują do siebie.',
+                birthdateRequired: 'Data urodzenia jest wymagana.',
+                countryRequired: 'Kraj jest wymagany.',
+                ageRestriction: 'Musisz mieć ukończone 13 lat, aby się zarejestrować.',
+                signupSuccess: 'Rejestracja zakończona pomyślnie! Możesz teraz się zalogować.',
+                signupError: 'Wystąpił błąd podczas rejestracji. Spróbuj ponownie.',
+                usernameTaken: 'Ta nazwa użytkownika jest już zajęta.' // Example for Firebase
+            },
+            en: {
+                signupTitle: 'PoKreGaM - Sign Up',
+                signupHeader: 'Create your PoKreGaM account',
+                selectCharacterLabel: 'Select your character:',
+                defaultAvatarName: 'Default',
+                wizardAvatarName: 'Wizard',
+                knightAvatarName: 'Knight',
+                elfAvatarName: 'Elf',
+                robotAvatarName: 'Robot',
+                usernameLabel: 'Username:',
+                emailLabel: 'Email (optional):',
+                countryLabel: 'Country:',
+                selectCountryOption: 'Select a country',
+                passwordLabel: 'Password:',
+                confirmPasswordLabel: 'Confirm Password:',
+                birthdateLabel: 'Birthdate:',
+                signUpButton: 'Sign Up',
+                hasAccountText: 'Already have an account?',
+                loginLink: 'Log In',
+                usernameRequired: 'Username is required.',
+                passwordRequired: 'Password is required.',
+                passwordMinLength: 'Password must be at least 6 characters long.',
+                passwordsMismatch: 'Passwords do not match.',
+                birthdateRequired: 'Birthdate is required.',
+                countryRequired: 'Country is required.',
+                ageRestriction: 'You must be at least 13 years old to register.',
+                signupSuccess: 'Registration successful! You can now log in.',
+                signupError: 'An error occurred during registration. Please try again.',
+                usernameTaken: 'This username is already taken.'
+            },
+            ru: {
+                signupTitle: 'PoKreGaM - Регистрация',
+                signupHeader: 'Создайте свой аккаунт PoKreGaM',
+                selectCharacterLabel: 'Выберите своего персонажа:',
+                defaultAvatarName: 'По умолчанию',
+                wizardAvatarName: 'Волшебник',
+                knightAvatarName: 'Рыцарь',
+                elfAvatarName: 'Эльфийка',
+                robotAvatarName: 'Робот',
+                usernameLabel: 'Имя пользователя:',
+                emailLabel: 'Электронная почта (необязательно):',
+                countryLabel: 'Страна:',
+                selectCountryOption: 'Выберите страну',
+                passwordLabel: 'Пароль:',
+                confirmPasswordLabel: 'Подтвердите пароль:',
+                birthdateLabel: 'Дата рождения:',
+                signUpButton: 'Зарегистрироваться',
+                hasAccountText: 'Уже есть аккаунт?',
+                loginLink: 'Войти',
+                usernameRequired: 'Имя пользователя обязательно.',
+                passwordRequired: 'Пароль обязателен.',
+                passwordMinLength: 'Пароль должен содержать не менее 6 символов.',
+                passwordsMismatch: 'Пароли не совпадают.',
+                birthdateRequired: 'Дата рождения обязательна.',
+                countryRequired: 'Страна обязательна.',
+                ageRestriction: 'Вам должно быть не менее 13 лет для регистрации.',
+                signupSuccess: 'Регистрация прошла успешно! Теперь вы можете войти.',
+                signupError: 'Произошла ошибка при регистрации. Пожалуйста, попробуйте снова.',
+                usernameTaken: 'Это имя пользователя уже занято.'
+            },
+            hu: {
+                signupTitle: 'PoKreGaM - Regisztráció',
+                signupHeader: 'Hozza létre PoKreGaM fiókját',
+                selectCharacterLabel: 'Válassza ki karakterét:',
+                defaultAvatarName: 'Alapértelmezett',
+                wizardAvatarName: 'Varázsló',
+                knightAvatarName: 'Lovag',
+                elfAvatarName: 'Elf',
+                robotAvatarName: 'Robot',
+                usernameLabel: 'Felhasználónév:',
+                emailLabel: 'E-mail (opcionális):',
+                countryLabel: 'Ország:',
+                selectCountryOption: 'Válasszon országot',
+                passwordLabel: 'Jelszó:',
+                confirmPasswordLabel: 'Jelszó megerősítése:',
+                birthdateLabel: 'Születési dátum:',
+                signUpButton: 'Regisztráció',
+                hasAccountText: 'Már van fiókja?',
+                loginLink: 'Bejelentkezés',
+                usernameRequired: 'Felhasználónév kötelező.',
+                passwordRequired: 'Jelszó kötelező.',
+                passwordMinLength: 'A jelszónak legalább 6 karakter hosszúnak kell lennie.',
+                passwordsMismatch: 'A jelszavak nem egyeznek.',
+                birthdateRequired: 'Születési dátum kötelező.',
+                countryRequired: 'Ország kötelező.',
+                ageRestriction: 'Legalább 13 évesnek kell lennie a regisztrációhoz.',
+                signupSuccess: 'Sikeres regisztráció! Most már bejelentkezhet.',
+                signupError: 'Hiba történt a regisztráció során. Kérjük, próbálja újra.',
+                usernameTaken: 'Ez a felhasználónév már foglalt.'
+            },
+            mk: {
+                signupTitle: 'PoKreGaM - Регистрација',
+                signupHeader: 'Креирајте ја вашата PoKreGaM сметка',
+                selectCharacterLabel: 'Изберете го вашиот карактер:',
+                defaultAvatarName: 'Стандарден',
+                wizardAvatarName: 'Волшебник',
+                knightAvatarName: 'Витез',
+                elfAvatarName: 'Елф',
+                robotAvatarName: 'Робот',
+                usernameLabel: 'Корисничко име:',
+                emailLabel: 'Е-пошта (опционално):',
+                countryLabel: 'Држава:',
+                selectCountryOption: 'Изберете држава',
+                passwordLabel: 'Лозинка:',
+                confirmPasswordLabel: 'Потврди лозинка:',
+                birthdateLabel: 'Датум на раѓање:',
+                signUpButton: 'Регистрирај се',
+                hasAccountText: 'Веќе имате сметка?',
+                loginLink: 'Најави се',
+                usernameRequired: 'Корисничкото име е задолжително.',
+                passwordRequired: 'Лозинката е задолжителна.',
+                passwordMinLength: 'Лозинката мора да има најмалку 6 знаци.',
+                passwordsMismatch: 'Лозинките не се совпаѓаат.',
+                birthdateRequired: 'Датумот на раѓање е задолжителен.',
+                countryRequired: 'Државата е задолжителна.',
+                ageRestriction: 'Мора да имате најмалку 13 години за да се регистрирате.',
+                signupSuccess: 'Успешна регистрација! Сега можете да се најавите.',
+                signupError: 'Настана грешка при регистрацијата. Ве молиме обидете се повторно.',
+                usernameTaken: 'Ова корисничко име е веќе зафатено.'
+            }
+        };
+
+        let selectedAvatarUrl = "https://placehold.co/80x80/cccccc/000000?text=👤"; // Default avatar
+
+        // Function to set language
+        function setLanguage(lang) {
+            document.querySelectorAll('[data-key]').forEach(element => {
+                const key = element.getAttribute('data-key');
+                if (translations[lang] && translations[lang][key]) {
+                    if (element.tagName === 'TITLE') {
+                        document.title = translations[lang][key];
+                    } else {
+                        element.textContent = translations[lang][key];
+                    }
+                }
+            });
+            // Update avatar names if they are part of data-key
+            document.querySelectorAll('.avatar span[data-key]').forEach(span => {
+                const key = span.getAttribute('data-key');
+                if (translations[lang] && translations[lang][key]) {
+                    span.textContent = translations[lang][key];
+                }
+            });
+
+            // Clear messages on language change
+            document.getElementById('signUpError').textContent = '';
+            document.getElementById('signUpSuccess').textContent = '';
+        }
+
+        // Event listener for language selection
+        document.getElementById('languageSelect').addEventListener('change', function() {
+            setLanguage(this.value);
+        });
+
+        // Initial language set to Polish and load avatars
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('languageSelect').value = 'pl';
+            setLanguage('pl');
+
+            // Avatars selection logic
+            const avatarsContainer = document.getElementById('avatarsContainer');
+            avatarsContainer.addEventListener('click', function(event) {
+                let targetAvatar = event.target.closest('.avatar');
+                if (targetAvatar) {
+                    // Remove 'selected' class from all avatars
+                    document.querySelectorAll('.avatar').forEach(avatar => {
+                        avatar.classList.remove('selected');
+                    });
+                    // Add 'selected' class to the clicked avatar
+                    targetAvatar.classList.add('selected');
+                    selectedAvatarUrl = targetAvatar.getAttribute('data-avatar-url');
+                }
+            });
+
+            // Select the default avatar initially
+            const defaultAvatar = document.querySelector('.avatar[data-avatar-url="https://placehold.co/80x80/cccccc/000000?text=👤"]');
+            if (defaultAvatar) {
+                defaultAvatar.classList.add('selected');
+            }
+        });
+
+        // Sign Up form submission
+        document.getElementById('signUpForm').addEventListener('submit', async function(event) {
+            event.preventDefault(); // Prevent default form submission
+
+            const username = document.getElementById('signUpUsername').value.trim();
+            const email = document.getElementById('signUpEmail').value.trim();
+            const country = document.getElementById('signUpCountry').value;
+            const password = document.getElementById('signUpPassword').value;
+            const confirmPassword = document.getElementById('signUpConfirmPassword').value;
+            const birthdate = document.getElementById('signUpBirthdate').value;
+            const signUpError = document.getElementById('signUpError');
+            const signUpSuccess = document.getElementById('signUpSuccess');
+            const currentLang = document.getElementById('languageSelect').value;
+
+            signUpError.textContent = ''; // Clear previous errors
+            signUpSuccess.textContent = ''; // Clear previous success messages
+
+            // Basic validation
+            if (!username) {
+                signUpError.textContent = translations[currentLang].usernameRequired;
+                return;
+            }
+            if (!password) {
+                signUpError.textContent = translations[currentLang].passwordRequired;
+                return;
+            }
+            if (password.length < 6) {
+                signUpError.textContent = translations[currentLang].passwordMinLength;
+                return;
+            }
+            if (password !== confirmPassword) {
+                signUpError.textContent = translations[currentLang].passwordsMismatch;
+                return;
+            }
+            if (!birthdate) {
+                signUpError.textContent = translations[currentLang].birthdateRequired;
+                return;
+            }
+            if (!country) {
+                signUpError.textContent = translations[currentLang].countryRequired;
+                return;
+            }
+
+            // Age validation (at least 13 years old)
+            const birthDateObj = new Date(birthdate);
+            const today = new Date();
+            let age = today.getFullYear() - birthDateObj.getFullYear();
+            const m = today.getMonth() - birthDateObj.getMonth();
+            if (m < 0 || (m === 0 && today.getDate() < birthDateObj.getDate())) {
+                age--;
+            }
+            if (age < 13) {
+                signUpError.textContent = translations[currentLang].ageRestriction;
+                return;
+            }
+
+            // --- Firebase Registration Logic (PLACEHOLDER) ---
+            // W tym miejscu dodałbyś logikę rejestracji użytkownika w Firebase Auth
+            // i zapisywania danych profilu do Firestore.
+
+            // Example of a simulated successful registration
+            console.log("Simulating registration with:", {
+                username,
+                email,
+                country,
+                birthdate,
+                avatar: selectedAvatarUrl
+            });
+
+            // Replace this simulated success with actual Firebase calls
+            // try {
+            //     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+            //     const user = userCredential.user;
+            //     console.log("Firebase user created:", user.uid);
+
+            //     // Save user profile data to Firestore
+            //     await setDoc(doc(db, "users", user.uid), {
+            //         username: username,
+            //         email: email,
+            //         country: country,
+            //         birthdate: birthdate,
+            //         avatarUrl: selectedAvatarUrl,
+            //         xp: 0,
+            //         level: 1,
+            //         gold: 0,
+            //         friends: []
+            //     });
+            //     console.log("User profile saved to Firestore.");
+
+            //     signUpSuccess.textContent = translations[currentLang].signupSuccess;
+            //     // Optionally redirect to login page after a short delay
+            //     setTimeout(() => {
+            //         window.location.href = 'login.html';
+            //     }, 2000);
+
+            // } catch (error) {
+            //     console.error("Firebase registration error:", error.code, error.message);
+            //     let errorMessage = translations[currentLang].signupError;
+            //     if (error.code === 'auth/email-already-in-use') {
+            //         errorMessage = 'Ten adres e-mail jest już używany.'; // Add specific error translation
+            //     } else if (error.code === 'auth/invalid-email') {
+            //         errorMessage = 'Nieprawidłowy format adresu e-mail.';
+            //     }
+            //     signUpError.textContent = errorMessage;
+            // }
+
+            // --- Simulated success/error for demonstration ---
+            // If you uncomment the Firebase logic above, remove this part.
+            if (username === 'existingUser') { // Example of a simulated taken username
+                signUpError.textContent = translations[currentLang].usernameTaken;
+            } else {
+                signUpSuccess.textContent = translations[currentLang].signupSuccess;
+                // Simulate redirection
+                setTimeout(() => {
+                    window.location.href = 'login.html';
+                }, 2000);
+            }
+        });
+    </script>
+</body>
+</html>
